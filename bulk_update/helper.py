@@ -68,10 +68,10 @@ def bulk_update(objs, meta=None, update_fields=None, exclude_fields=None,
     vendor = connection.vendor
     use_cast = 'mysql' not in vendor and 'sqlite' not in connection.vendor
     if use_cast:
-        case_clause_template = '{column} = CAST(CASE {pkcolumn} {{when}}'
+        case_clause_template = '"{column}" = CAST(CASE "{pkcolumn}" {{when}}'
         tail_end_template = ' END AS {type})'
     else:
-        case_clause_template = '{column} = (CASE {pkcolumn} {{when}}'
+        case_clause_template = '"{column}" = (CASE "{pkcolumn}" {{when}}'
         tail_end_template = ' END)'
 
     for objs_batch in grouper(objs, batch_size):
@@ -131,7 +131,7 @@ def bulk_update(objs, meta=None, update_fields=None, exclude_fields=None,
             parameters.extend(pks)
 
             sql = (
-                'UPDATE {dbtable} SET {values} WHERE {pkcolumn} '
+                'UPDATE "{dbtable}" SET {values} WHERE "{pkcolumn}" '
                 'in {in_clause_sql}'
                 .format(
                     dbtable=dbtable, values=values, pkcolumn=pkcolumn,
